@@ -7,4 +7,3 @@ import { scrap } from "./src/scrapt.mjs";
 
 const scraptData=await scrap('https://www.mollyjogger.com/collections/inventory/products/scrimshaw-heirloom-knife-kit');
 const data=await parseData(scraptData);
-console.log(data);

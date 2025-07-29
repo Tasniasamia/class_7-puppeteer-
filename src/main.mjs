@@ -6,41 +6,43 @@ const prisma = new PrismaClient();
 
 
   console.log(await prisma.Page.count());
+ 
+  
 
-  await prisma.page.create({
-    data: {
-      url: 'https://www.mollyjogger.com/collections/inventory/products/scrimshaw-heirloom-knife-kit',
-      scrapData: "",
-      scraptStatus: "PENDING",
-      scrapError: "",
-      parseData: "",
-      parseError: "",
-      parseStatus: "PENDING",
-      title: "",
-      content: ""
-    }
-  }).catch((err) => {
-    console.log(err.message);
-  });
-   
-  console.log(await prisma.Page.count());
+    await prisma.Page.create({
+        data: {
+          url: "https://www.mollyjogger.com/collections/inventory/products/scrimshaw-heirloom-knife-kit",
+          scrapData: "",
+          scraptStatus: "PENDING",
+          scrapError: "",
+          parseData: "",
+          parseError: "",
+          parseStatus: "PENDING",
+          title: "",
+          content: ""
+        }
+      }).catch((err) => {
+        console.log(err.message);
+      });
+  
+    console.log(await prisma.Page.count());
+
+  
 
   while(true){
-    const pendingData=await prisma.page.findFirst({
-        where:{parseStatus:'PENDING'}
+    const pendingData=await prisma.Page.findFirst({
+        where:{scraptStatus:"PENDING"}
     })
     if(pendingData){
-        const datas=await scrap(pendingData?.url);
-        await prisma.Page.update({
-            where:{id:pendingData?.id},
+        const data=await scrap(pendingData?.url);
+       await prisma.Page.update({
+            where:{url:pendingData?.url},
             data:{
-               scraptStatus:"DONE",
-               scrapData:datas
-             }
-            
-        })
+                scraptStatus:"DONE",
+                scrapData:data
+            }
+        });
     }
-    await new Promise((resolve,reject)=>{setTimeout(resolve,3000)})
   }
 
 
